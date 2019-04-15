@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+	  <meta charset="utf-8"/>
+	</head>
+	<body onload="getInfo()">
+		<h3>修改用户信息的页面</h3>
+		<div>
+		登录名:
+		</div>
+		<div>
+		<input type="text" id='uname'>
+		</div>
+		<div>
+		密码:
+		</div>
+		<div>
+		<input type="text" id='upwd'>
+		</div>
+		<div>
+		电子邮箱:
+		</div>
+		<div>
+		<input type="text" id='email'>
+		</div>
+		<div>
+		联系电话: 
+		</div>
+		<div>
+		<input type="text" id='phone'>
+		</div>
+		<div>
+		性别:
+		</div>
+		<div>
+		<input type="radio" id='m' name="gender" value='1'><label for="m">男</label>
+		<input type="radio" id='w' name="gender" value='0'><label for="w">女</label>
+		<input type="radio" id='n' name="gender" value='2'><label for="n">未知</label>
+		</div>
+		<div>
+		年龄: 
+		</div>
+		<div>
+		<input type="text" id='age'>
+		</div>
+		<div>
+		生日: 
+		</div>
+		<div>
+		<input type="text" id='birthday'>
+		</div>
+		<button onclick="updateUser()">确定修改</button>
+		<script>
+			//点击确定修改按钮时执行的操作，y是形参，实参为uid
+			var uid='';
+			function updateUser(){
+				//创建异步对象
+				var xhr=new XMLHttpRequest();
+				//绑定监听
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState==4 && xhr.status==200){
+						var result=xhr.responseText;
+						if(result=='1'){
+							alert('修改成功');
+							location.href="http://127.0.0.1:3000/user_update.html";
+						}else{
+							alert('修改失败')
+						}
+					}
+				}
+				var url="/user/update";
+				xhr.open('post',url,true);
+				xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+				//拼接字符串，y是uid的值
+				var gender='';
+				if(w.checked==true){
+					gender=0;
+				}else if(m.checked==true){
+					gender=1;
+				}else{
+					gender=2;
+				}
+				var formdata="uname="+uname.value+"&upwd="+upwd.value+"&email="+email.value+"&phone="+phone.value+"&gender="+gender+"&age="+age.value+"&birthday="+birthday.value+"&uid="+uid;
+				console.log(formdata);
+				xhr.send(formdata);
+			}
+			</script>
+			<script>
+			//查询一个uid的用户相关信息
+			function getInfo(){
+				//获取当前url中的参数uid
+				var urlParams=new URLSearchParams(location.search);
+				uid=urlParams.get('uid');
+				//创建异步对象
+				var xhr=new XMLHttpRequest();
+				//绑定监听
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState==4 && xhr.status==200){
+						var result=xhr.responseText;
+						if(result=='1'){
+							alert('没有查询到用户信息');
+							return;
+						}else if(result=='0'){
+							alert('uid不存在');
+							return;
+						}
+						var arr=JSON.parse(result);
+						var arrs=arr[0]
+						uname.value=arrs.uname
+						upwd.value=arrs.upwd
+						email.value=arrs.email
+						phone.value=arrs.phone
+						if(arrs.gender=='0'){
+							w.checked=true;
+						}else if(arrs.gender=='1'){
+							m.checked=true;
+						}else{
+							n.checked=true;
+						}
+						age.value=arrs.age
+						birthday.value=arrs.age
+					}
+				}
+				var url="/user/list?uid="+uid;
+				xhr.open('get',url,true);
+				xhr.send();
+			}
+		</script>
+	</body>
+</html>

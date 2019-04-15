@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #lunbo{
+            width: 100%;
+            height:700px;
+        }
+        /* #header>.headerlbt{ } */
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="lunbo"></div>
+    </div>
+</body>
+<script>
+    var lunbo=document.getElementById("lunbo");
+     lunbo.className="headerlbt";
+     var x=1;
+    var lbt=`url("images/slide-${x}.jpg")`
+    lunbo.style.background=lbt;
+     setInterval(set,3000);
+    function set(){
+        x++;
+      if(x==6){x=1};
+        var lbt=`url("images/slide-${x}.jpg")`
+         lunbo.style.background=lbt;
+    }
+</script>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+	  <meta charset="utf-8"/>
+	</head>
+	<body onload="login()" bgcolor="pink">
+		<table border='1px' width="800px">
+		<thead>
+			<th>登陆名称</th>
+			<th>登录密码</th>
+			<th>电子邮箱</th>
+			<th>联系电话</th>
+			<th>性别</th>
+			<th>年龄</th>
+			<th>出生日期</th>
+			<th>操作</th>
+		</thead>	
+		<tbody id="d1"></tbody>
+		</table>
+		<script>
+		//查询所有用户信息（页面刷新时执行）
+			function login(){
+				var xhr=new XMLHttpRequest();
+				console.log(xhr)
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState==4 && xhr.status==200){
+						var result=xhr.responseText;
+						var arr=JSON.parse(result);
+						//拼接字符串
+						var x="";
+						for(var i=0;i<arr.length;i++){
+							x+="<tr>"
+							for(var key in arr[i]){
+								//不在列表中显示uid的值，在循环到uid时跳过当前循环
+								if(key=='uid'){
+									continue;
+								}else if(key=="avatar"){
+								continue;
+								}else if(key=="user_name"){
+								continue;
+							}
+								if(key=='gender'){
+								if(arr[i].gender==0){
+									arr[i].gender="女"
+								}else if(arr[i].gender==1){
+									arr[i].gender="男"
+								}else{
+									arr[i].gender="未知"
+								}
+								}
+								x+="<td>"+arr[i][key]+"</td>";
+							}
+							x+=`<td><a href="javascript:deleteUser('${arr[i].uid}')">删除</a>`+' ';
+							x+="<a href='user_up.html?uid="+arr[i].uid+"'>修改</a></td>";
+							x+="</tr>";
+						}
+						//拼接table结束标签
+					}console.log(x);
+					//给div赋值
+					d1.innerHTML=x;
+				}
+				var url="/user/lister"
+				xhr.open('get',url,true);
+				xhr.send(null);
+			}
+		</script>
+		<script>
+			//点击删除按钮时执行的操作，是uid的值
+			function deleteUser(uid){
+				var xhr=new XMLHttpRequest();
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState==4 && xhr.status==200){
+						var result=xhr.responseText;
+						console.log(result);
+						if(result=="1"){
+							alert("删除成功");
+							login();
+						}else if(result=="0"){
+							alert("查无此人");
+						}
+					}
+				}
+				var url='/user/delete?uid='+uid;
+				xhr.open('get',url,true)
+				xhr.send(null);
+			}
+		</script>
+	</body>
+</html>

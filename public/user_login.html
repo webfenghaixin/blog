@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<link rel="stylesheet" href="./css/bootstrap.css"/>
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/popper.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<style>
+		*{margin: 0;padding: 0;}
+			#dd1{
+				width:100%;
+				height:1000px;
+				background:url("images/user_login.jpg") no-repeat;
+                background-size:100% 100%;
+				position:relative;
+			}	
+			#dd2{
+			  color:#f0ffff;
+				width: 483px;
+				height: 298px;
+				position:absolute;
+				top:200px;
+				left:710px;
+				background:rgba(0,0,0,0.4);
+			}	
+			#dd2 table input:not(.pb){
+				width: 300px;
+				height: 30px;
+			}
+			#dd2 .tt1{
+				width: 70px;
+				text-align: center;
+			}
+			#dd2 .cc1{
+				width: 300px;
+				height: 40px !important;
+				background:rgba(0,0,0,0.5);
+				margin:20px 84px;
+				color:#fff;
+			}
+			#dd2 h2{
+				font-size:30px;
+				font-weight:700;
+				margin:10px 180px;
+                text-align: center;
+			}
+			#dd2 table td{
+				border:5px solid rgba(0,0,0,0);
+                width: 100%;
+			}
+			#d1{
+				font-size:30px;
+				width: 350px;
+                height: 50px;
+                margin: 0 auto;
+                text-align: center;
+			}
+            .succeed{
+                color: rgb(113, 243, 113);
+            }
+            .err{
+                color:rgb(243, 81, 81);
+            }
+		</style>
+	</style>
+</head>
+	<body>
+	<div id="a1">
+        <div id='dd1'>
+            <div id='dd2'>
+            <h2>用户登录</h2>
+        <form method='post' action='/user/reg'>
+      <table>
+          <tr>
+              <td class='tt1'>用户名:</td>
+              <td><input type='text' id='uname'  placeholder="请输入用户名">
+                <span id='msg1'></span>
+                </td>
+          </tr>
+          <tr>
+              <td class='tt1'>密码:</td>
+              <td><input type='password' id='upwd' placeholder="请输入密码" maxlength="12">
+                <span id='msg2'></span>
+                </td>
+          </tr>
+          <tr>
+              <td colspan='2'><input type='button' value='登录' onclick='login()' class='cc1'></td>
+          </tr>
+      </table>
+        </form>
+        <div id='d1'></div>
+        </div>
+        </div>
+	</div>
+		<script>
+			function login(){
+				var a=0;
+				var xhr=new XMLHttpRequest();
+				xhr.onreadystatechange=function(){
+				if(xhr.readyState==4 && xhr.status==200){
+					var result=xhr.responseText;
+					d1.innerHTML=result;
+					if(result=="登录成功"){
+						document.getElementById("d1").className="succeed";
+						setTimeout(() => {
+							window.location.href="index.html";
+						}, 500);
+						
+					}else{
+						document.getElementById("d1").className="err";}
+					
+				}
+
+			}
+				xhr.open("post","/user/login",true);
+				xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");                       
+				var formdata="uname="+uname.value+"&upwd="+upwd.value;
+				console.log(formdata)
+				xhr.send(formdata);
+			}
+		</script>
+	</body>
+</html>
